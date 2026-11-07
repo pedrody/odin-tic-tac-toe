@@ -17,13 +17,20 @@ function Gameboard() {
         console.log(getBoard());
     }
 
-    const play = (row, column) => {
+    const play = (row, column, player) => {
         if (board[row][column] !== 0) {
             return;
         }
 
-        board[row][column] = "x";
+        board[row][column] = player.getPlayerSymbol();
     }
 
     return { play, getBoard, printBoard };
+}
+
+function Player(name, symbol) {
+    const getPlayerName = () => name;
+    const getPlayerSymbol = () => symbol;
+
+    return { getPlayerName, getPlayerSymbol }
 }
