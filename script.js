@@ -2,6 +2,16 @@ function Gameboard() {
     const rows = 3;
     const columns = 3;
     const board = [];
+    const winConditions = [
+        [[0, 0], [0, 1], [0, 2]],
+        [[1, 0], [1, 1], [1, 2]],
+        [[2, 0], [2, 1], [2, 2]],
+        [[0, 0], [1, 0], [2, 0]],
+        [[0, 1], [1, 1], [2, 1]],
+        [[0, 2], [1, 2], [2, 2]],
+        [[0, 0], [1, 1], [2, 2]],
+        [[0, 2], [1, 1], [2, 0]]
+    ];
 
     for (let i = 0; i < rows; i++) {
         board[i] = [];
@@ -17,15 +27,20 @@ function Gameboard() {
         console.log(getBoard());
     }
 
-    const play = (row, column, player) => {
+    const play = (row, column, symbol) => {
         if (board[row][column] !== 0) {
             return;
         }
 
-        board[row][column] = player.getPlayerSymbol();
+        board[row][column] = symbol;
     }
 
-    return { play, getBoard, printBoard };
+    const checkWin = (symbol) => {
+        return winConditions.some(line =>
+            line.every(([r, c]) => board[r][c] === symbol));
+    }
+
+    return { play, getBoard, printBoard, checkWin };
 }
 
 function Player(name, symbol) {
@@ -38,7 +53,7 @@ function Player(name, symbol) {
 function Game() {
     const playerOneName = "Player One";
     const playerTwoName = "Player Two";
-    const board = Gameboard();
+    const gameBoard = Gameboard();
 
     const players = [
         Player(playerOneName, "x"),
@@ -52,9 +67,18 @@ function Game() {
     }
 
     const playRound = (row, column) => {
-        board.play(row, column, activePlayer);
+        gameBoard.play(row, column, activePlayer.getPlayerSymbol());
+
+        if (gameBoard.checkWin(activePlayer.getPlayerSymbol())) {
+            console.log(`${activePlayer.getPlayerName()} WIN!`);
+            return;
+        }
+
+        // TODO: check tie
+        // TODO: create method to reset game
+        // TODO: check if play was valid before switching turn
         switchPlayerTurn();
-        board.printBoard();
+        gameBoard.printBoard();
     }
 
     return { playRound }
