@@ -34,3 +34,28 @@ function Player(name, symbol) {
 
     return { getPlayerName, getPlayerSymbol }
 }
+
+function Game() {
+    const playerOneName = "Player One";
+    const playerTwoName = "Player Two";
+    const board = Gameboard();
+
+    const players = [
+        Player(playerOneName, "x"),
+        Player(playerTwoName, "o")
+    ];
+
+    let activePlayer = players[0];
+
+    const switchPlayerTurn = () => {
+        activePlayer = activePlayer === players[0] ? players[1] : players[0]
+    }
+
+    const playRound = (row, column) => {
+        board.play(row, column, activePlayer);
+        switchPlayerTurn();
+        board.printBoard();
+    }
+
+    return { playRound }
+}
