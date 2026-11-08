@@ -13,7 +13,6 @@ function Gameboard() {
         [[0, 2], [1, 1], [2, 0]]
     ];
 
-
     for (let i = 0; i < rows; i++) {
         board[i] = [];
 
@@ -57,7 +56,8 @@ function Player(name, symbol) {
 function Game() {
     const playerOneName = "Player One";
     const playerTwoName = "Player Two";
-    const gameBoard = Gameboard();
+    let gameBoard = Gameboard();
+    let gameOver = false;
 
     const players = [
         Player(playerOneName, "x"),
@@ -71,6 +71,10 @@ function Game() {
     }
 
     const playRound = (row, column) => {
+        if (gameOver) {
+            return;
+        }
+
         const validPlay = gameBoard.play(row, column, activePlayer.getPlayerSymbol());
 
         if (!validPlay) {
@@ -80,21 +84,25 @@ function Game() {
 
         if (gameBoard.checkWin(activePlayer.getPlayerSymbol())) {
             console.log(`${activePlayer.getPlayerName()} WIN!`);
+            gameOver = true;
             return;
         }
 
         if (gameBoard.checkTie()) {
             console.log("It's a TIE!");
+            gameOver = true;
             return;
         }
-
-        // TODO: create method to reset game
 
         switchPlayerTurn();
         gameBoard.printBoard();
     }
 
-    return { playRound }
+    const resetGame = () => {
+        gameBoard = Gameboard();
+        activePlayer = players[0];
+        gameOver = false;
+    }
+
+    return { playRound, resetGame }
 }
-
-
