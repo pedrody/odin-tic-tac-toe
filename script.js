@@ -95,7 +95,6 @@ function Game() {
         }
 
         switchPlayerTurn();
-        gameBoard.printBoard();
     }
 
     const resetGame = () => {
@@ -113,20 +112,36 @@ function ScreenController() {
     const boardDiv = document.getElementById("board");
 
     const updateScreen = () => {
-        // clear the board
+        // clear the board div
         boardDiv.textContent = "";
 
-        board.forEach((row) => {
-            row.forEach((cell) => {
+        board.forEach((row, rIndex) => {
+            row.forEach((cel, cIndex) => {
                 const cellBtn = document.createElement("button");
                 cellBtn.className = "cell";
+                cellBtn.dataset.row = rIndex;
+                cellBtn.dataset.column = cIndex;
+                cellBtn.textContent = board[rIndex][cIndex] === 0 ? "" : board[rIndex][cIndex];
+
                 boardDiv.append(cellBtn);
             });
         });
     }
 
+    const clickHandlerBoard = (e) => {
+        const row = e.target.dataset.row;
+        const col = e.target.dataset.column;
+
+        if (!row || !col) {
+            return;
+        }
+
+        game.playRound(row, col);
+        updateScreen();
+    }
+
+    boardDiv.addEventListener("click", (e) => clickHandlerBoard(e));
     updateScreen();
 }
 
 ScreenController();
-
