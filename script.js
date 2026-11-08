@@ -104,5 +104,29 @@ function Game() {
         gameOver = false;
     }
 
-    return { playRound, resetGame }
+    return { playRound, resetGame, getBoard: gameBoard.getBoard }
 }
+
+function ScreenController() {
+    const game = Game();
+    const board = game.getBoard();
+    const boardDiv = document.getElementById("board");
+
+    const updateScreen = () => {
+        // clear the board
+        boardDiv.textContent = "";
+
+        board.forEach((row) => {
+            row.forEach((cell) => {
+                const cellBtn = document.createElement("button");
+                cellBtn.className = "cell";
+                boardDiv.append(cellBtn);
+            });
+        });
+    }
+
+    updateScreen();
+}
+
+ScreenController();
+
