@@ -30,10 +30,11 @@ function Gameboard() {
 
     const play = (row, column, symbol) => {
         if (board[row][column] !== 0) {
-            return;
+            return false;
         }
 
         board[row][column] = symbol;
+        return true;
     }
 
     const checkWin = (symbol) => {
@@ -70,7 +71,12 @@ function Game() {
     }
 
     const playRound = (row, column) => {
-        gameBoard.play(row, column, activePlayer.getPlayerSymbol());
+        const validPlay = gameBoard.play(row, column, activePlayer.getPlayerSymbol());
+
+        if (!validPlay) {
+            console.log("Invalid play. Try again...");
+            return;
+        }
 
         if (gameBoard.checkWin(activePlayer.getPlayerSymbol())) {
             console.log(`${activePlayer.getPlayerName()} WIN!`);
@@ -83,7 +89,6 @@ function Game() {
         }
 
         // TODO: create method to reset game
-        // TODO: check if play was valid before switching turn
 
         switchPlayerTurn();
         gameBoard.printBoard();
@@ -91,4 +96,5 @@ function Game() {
 
     return { playRound }
 }
+
 
