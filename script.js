@@ -13,6 +13,7 @@ function Gameboard() {
         [[0, 2], [1, 1], [2, 0]]
     ];
 
+
     for (let i = 0; i < rows; i++) {
         board[i] = [];
 
@@ -40,7 +41,9 @@ function Gameboard() {
             line.every(([r, c]) => board[r][c] === symbol));
     }
 
-    return { play, getBoard, printBoard, checkWin };
+    const checkTie = () => board.every((r) => r.every((c) => c !== 0));
+
+    return { play, getBoard, printBoard, checkWin, checkTie };
 }
 
 function Player(name, symbol) {
@@ -74,12 +77,18 @@ function Game() {
             return;
         }
 
-        // TODO: check tie
+        if (gameBoard.checkTie()) {
+            console.log("It's a TIE!");
+            return;
+        }
+
         // TODO: create method to reset game
         // TODO: check if play was valid before switching turn
+
         switchPlayerTurn();
         gameBoard.printBoard();
     }
 
     return { playRound }
 }
+
