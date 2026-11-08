@@ -9,6 +9,22 @@ body {
     min-height: 100vh;
     align-items: center;
     justify-content: center;
+    background-color: #ffffff;
+}
+
+.actions button {
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    min-height: 36px;
+}
+
+#reset:hover {
+    border: 1px solid #dadce0;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
 }
 
 #board {
@@ -20,7 +36,7 @@ body {
 }
 
 .cell {
-    background-color: white;
+    background-color: #ffffff;
     border: 1px solid black;
     cursor: pointer;
     font-size: 4rem;

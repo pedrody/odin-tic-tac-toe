@@ -85,19 +85,16 @@ function Game() {
         const validPlay = gameBoard.play(row, column, activePlayer.getPlayerSymbol());
 
         if (!validPlay) {
-            console.log("Invalid play. Try again...");
             return;
         }
 
         if (gameBoard.checkWin(activePlayer.getPlayerSymbol())) {
-            console.log(`${activePlayer.getPlayerName()} WIN!`);
             gameOver = true;
             winner = activePlayer;
             return;
         }
 
         if (gameBoard.checkTie()) {
-            console.log("It's a TIE!");
             gameOver = true;
             return;
         }
@@ -115,7 +112,7 @@ function Game() {
     return {
         playRound,
         resetGame,
-        getBoard: gameBoard.getBoard,
+        getBoard: () => gameBoard.getBoard(),
         getActivePlayer,
         getWinner,
         isGameOver
@@ -124,11 +121,13 @@ function Game() {
 
 function ScreenController() {
     const game = Game();
-    const board = game.getBoard();
     const boardDiv = document.getElementById("board");
     const status = document.getElementById("status");
+    const resetBtn = document.getElementById("reset");
 
     const updateScreen = () => {
+        const board = game.getBoard();
+
         // clear the board div
         boardDiv.textContent = "";
 
@@ -170,6 +169,11 @@ function ScreenController() {
 
     boardDiv.addEventListener("click", (e) => clickHandlerBoard(e));
     updateScreen();
+
+    resetBtn.addEventListener("click", () => {
+        game.resetGame();
+        updateScreen();
+    });
 }
 
 ScreenController();
