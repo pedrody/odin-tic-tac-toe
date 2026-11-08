@@ -58,6 +58,7 @@ function Game() {
     const playerTwoName = "Player Two";
     let gameBoard = Gameboard();
     let gameOver = false;
+    let winner = null;
 
     const players = [
         Player(playerOneName, "x"),
@@ -69,6 +70,12 @@ function Game() {
     const switchPlayerTurn = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0]
     }
+
+    const getActivePlayer = () => activePlayer;
+
+    const getWinner = () => winner;
+
+    const isGameOver = () => gameOver;
 
     const playRound = (row, column) => {
         if (gameOver) {
@@ -85,6 +92,7 @@ function Game() {
         if (gameBoard.checkWin(activePlayer.getPlayerSymbol())) {
             console.log(`${activePlayer.getPlayerName()} WIN!`);
             gameOver = true;
+            winner = activePlayer;
             return;
         }
 
@@ -101,19 +109,38 @@ function Game() {
         gameBoard = Gameboard();
         activePlayer = players[0];
         gameOver = false;
+        winner = null;
     }
 
-    return { playRound, resetGame, getBoard: gameBoard.getBoard }
+    return {
+        playRound,
+        resetGame,
+        getBoard: gameBoard.getBoard,
+        getActivePlayer,
+        getWinner,
+        isGameOver
+    }
 }
 
 function ScreenController() {
     const game = Game();
     const board = game.getBoard();
     const boardDiv = document.getElementById("board");
+    const status = document.getElementById("status");
 
     const updateScreen = () => {
         // clear the board div
         boardDiv.textContent = "";
+
+        const player = game.getActivePlayer();
+        if (game.isGameOver()) {
+            const winner = game.getWinner();
+
+            status.textContent = winner ?
+                `${winner.getPlayerName()} WINS!` : "It's a TIE!";
+        } else {
+            status.textContent = `${player.getPlayerName()}'s turn...`;
+        }
 
         board.forEach((row, rIndex) => {
             row.forEach((cel, cIndex) => {
@@ -137,6 +164,7 @@ function ScreenController() {
         }
 
         game.playRound(row, col);
+
         updateScreen();
     }
 
@@ -145,3 +173,4 @@ function ScreenController() {
 }
 
 ScreenController();
+
