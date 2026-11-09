@@ -3,6 +3,7 @@
 }
 
 body {
+    font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -12,7 +13,44 @@ body {
     background-color: #ffffff;
 }
 
-.actions button {
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-actions {
+    margin: auto;
+}
+
+.input-group {
+    margin: auto;
+}
+
+label {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+input {
+    font-size: 14px;
+    padding: 10px;
+    border: 1px solid #f8f9fa;
+}
+
+input:focus {
+    outline-color: #dadce0;
+}
+
+dialog {
+    padding: 30px;
+    border: none;
+    border-radius: 8px;
+    width: 400px;
+}
+
+.actions button,
+dialog button {
     border: none;
     cursor: pointer;
     padding: 8px;
@@ -22,7 +60,8 @@ body {
     min-height: 36px;
 }
 
-#reset:hover {
+.actions button:hover,
+dialog button:hover {
     border: 1px solid #dadce0;
     box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
 }
@@ -73,7 +112,15 @@ body {
 }
 
 .player-name {
-    font-size: 30px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
 }
 
 .cell {

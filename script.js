@@ -50,11 +50,18 @@ function Player(name, symbol) {
     let wins = 0;
 
     const getPlayerName = () => name;
+    const setPlayerName = (newName) => name = newName;
     const getPlayerSymbol = () => symbol;
     const getWins = () => wins;
     const incrementWins = () => wins++;
 
-    return { getPlayerName, getPlayerSymbol, getWins, incrementWins }
+    return {
+        getPlayerName,
+        getPlayerSymbol,
+        getWins,
+        incrementWins,
+        setPlayerName
+    }
 }
 
 function Game() {
@@ -134,6 +141,12 @@ function ScreenController() {
     const resetBtn = document.getElementById("reset");
     const p1WinsPara = document.getElementById("p1-wins");
     const p2WinsPara = document.getElementById("p2-wins");
+    const editNamesBtn = document.getElementById("edit-names-btn");
+    const namesDialog = document.getElementById("names-dialog");
+    const p1NameInput = document.getElementById("p1-name");
+    const p2NameInput = document.getElementById("p2-name");
+    const namesForm = document.getElementById("names-form");
+    const [p1NamePara, p2NamePara] = document.querySelectorAll(".player-name");
 
     const updateScreen = () => {
         const board = game.getBoard();
@@ -141,15 +154,19 @@ function ScreenController() {
         // clear the board div
         boardDiv.textContent = "";
 
+        const [p1, p2] = game.getPlayers();
+        p1WinsPara.textContent = `Wins: ${p1.getWins()}`;
+        p2WinsPara.textContent = `Wins: ${p2.getWins()}`;
+        p1NamePara.textContent = p1.getPlayerName();
+        p2NamePara.textContent = p2.getPlayerName();
+
         const player = game.getActivePlayer();
         if (game.isGameOver()) {
             const winner = game.getWinner();
 
             if (winner) {
                 status.textContent = `${winner.getPlayerName()} WINS!`;
-                const [p1, p2] = game.getPlayers();
-                p1WinsPara.textContent = `Wins: ${p1.getWins()}`;
-                p2WinsPara.textContent = `Wins: ${p2.getWins()}`;
+
             } else {
                 status.textContent = "It's a TIE!";
             }
@@ -188,6 +205,34 @@ function ScreenController() {
 
     resetBtn.addEventListener("click", () => {
         game.resetGame();
+        updateScreen();
+    });
+
+    editNamesBtn.addEventListener("click", () => {
+        const [p1, p2] = game.getPlayers();
+        p1NameInput.value = p1.getPlayerName();
+        p2NameInput.value = p2.getPlayerName();
+        namesDialog.showModal();
+    });
+
+    namesForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(namesForm);
+        const name1 = formData.get("p1-name").trim();
+        const name2 = formData.get("p2-name").trim();
+
+        const [p1, p2] = game.getPlayers();
+
+        if (name1) {
+            p1.setPlayerName(formData.get("p1-name"));
+        }
+
+        if (name2) {
+            p2.setPlayerName(formData.get("p2-name"));
+        }
+
+        namesDialog.close();
         updateScreen();
     });
 }
