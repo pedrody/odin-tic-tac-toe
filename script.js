@@ -47,10 +47,14 @@ function Gameboard() {
 }
 
 function Player(name, symbol) {
+    let wins = 0;
+
     const getPlayerName = () => name;
     const getPlayerSymbol = () => symbol;
+    const getWins = () => wins;
+    const incrementWins = () => wins++;
 
-    return { getPlayerName, getPlayerSymbol }
+    return { getPlayerName, getPlayerSymbol, getWins, incrementWins }
 }
 
 function Game() {
@@ -73,6 +77,8 @@ function Game() {
 
     const getActivePlayer = () => activePlayer;
 
+    const getPlayers = () => players;
+
     const getWinner = () => winner;
 
     const isGameOver = () => gameOver;
@@ -91,6 +97,7 @@ function Game() {
         if (gameBoard.checkWin(activePlayer.getPlayerSymbol())) {
             gameOver = true;
             winner = activePlayer;
+            activePlayer.incrementWins();
             return;
         }
 
@@ -115,7 +122,8 @@ function Game() {
         getBoard: () => gameBoard.getBoard(),
         getActivePlayer,
         getWinner,
-        isGameOver
+        isGameOver,
+        getPlayers
     }
 }
 
@@ -124,6 +132,8 @@ function ScreenController() {
     const boardDiv = document.getElementById("board");
     const status = document.getElementById("status");
     const resetBtn = document.getElementById("reset");
+    const p1WinsPara = document.getElementById("p1-wins");
+    const p2WinsPara = document.getElementById("p2-wins");
 
     const updateScreen = () => {
         const board = game.getBoard();
@@ -135,8 +145,14 @@ function ScreenController() {
         if (game.isGameOver()) {
             const winner = game.getWinner();
 
-            status.textContent = winner ?
-                `${winner.getPlayerName()} WINS!` : "It's a TIE!";
+            if (winner) {
+                status.textContent = `${winner.getPlayerName()} WINS!`;
+                const [p1, p2] = game.getPlayers();
+                p1WinsPara.textContent = `Wins: ${p1.getWins()}`;
+                p2WinsPara.textContent = `Wins: ${p2.getWins()}`;
+            } else {
+                status.textContent = "It's a TIE!";
+            }
         } else {
             status.textContent = `${player.getPlayerName()}'s turn...`;
         }
